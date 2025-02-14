@@ -1,4 +1,4 @@
-import OBR, { buildShape, isImage } from "@owlbear-rodeo/sdk";
+import OBR, { buildShape, isImage, Math2 } from "@owlbear-rodeo/sdk";
 import { TOOL_ID, MODE_ID } from "../ids";
 import { defaultToolMetadata, isToolMetadata } from "../types";
 import {
@@ -104,9 +104,15 @@ function createMode() {
         if (!isToolMetadata(metadata)) throw "Error bad metadata";
         const aura = buildShape()
           .id(`${target.id}-aura`)
-          .shapeType("CIRCLE")
-          .position(getImageCenter(target, sceneDpi))
+          .shapeType("RECTANGLE")
+          .position(
+            Math2.subtract(getImageCenter(target, sceneDpi), {
+              x: width / 2 + sceneDpi * metadata.radius,
+              y: width / 2 + sceneDpi * metadata.radius,
+            }),
+          )
           .attachedTo(target.id)
+          .disableAttachmentBehavior(["ROTATION"])
           .width(width + sceneDpi * metadata.radius * 2)
           .height(width + sceneDpi * metadata.radius * 2)
           .fillColor(metadata.color)
